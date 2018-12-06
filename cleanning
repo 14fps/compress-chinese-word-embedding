@@ -1,0 +1,32 @@
+import jieba
+import re
+from os import path
+
+# read text file
+d = path.dirname(__file__)
+text_path = '20130820'
+text = open(path.join(d, text_path),encoding="utf8").read()
+
+# delete URL, "`1`2" and punctuation
+text_clean = re.sub(r"http\S+`1`2", "", text)
+text_clean = re.sub(r"http\S+", "", text)
+text_clean = text_clean.replace("`1`2", " ")
+text_clean = re.sub("[\s+\.\!\/_,$%^*(+\[\]\"“”‘’《》()\']+|[+——！，：:。？?、~@#￥%……&*（）]+", "", text_clean)
+
+# segment the sentence
+seg_list = jieba.cut(text_clean, cut_all=False, HMM=False)
+print("/ ".join(seg_list))
+
+
+# jieba 使用范例
+# seg_list = jieba.cut("我来到北京清华大学", cut_all=True, HMM=False)
+# print("Full Mode: " + "/ ".join(seg_list))  # 全模式
+#
+# seg_list = jieba.cut("我来到北京清华大学", cut_all=False, HMM=True)
+# print("Default Mode: " + "/ ".join(seg_list))  # 默认模式
+#
+# seg_list = jieba.cut("他来到了网易杭研大厦", HMM=False)
+# print(", ".join(seg_list))
+#
+# seg_list = jieba.cut_for_search("小明硕士毕业于中国科学院计算所，后在日本京都大学深造", HMM=False)  # 搜索引擎模式
+# print(", ".join(seg_list))
